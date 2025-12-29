@@ -1,0 +1,8 @@
+# Implemented from Task ID: T-003
+# Development dependencies for Phase 1 Console Todo Application
+# Constitution requirement: Python 3.13+ standard library for runtime
+# These are development/testing tools only
+
+pytest>=8.0
+mypy>=1.0
+coverage>=7.0
