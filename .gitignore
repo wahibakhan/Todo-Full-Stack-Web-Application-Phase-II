@@ -80,3 +80,5 @@ cookies.txt
 
 # Sensitive Scripts
 count_users.py
+
+.vercel
