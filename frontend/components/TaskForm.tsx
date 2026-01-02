@@ -30,7 +30,7 @@ export default function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
     setLoading(true);
 
     try {
-      if (isEditing) {
+      if (isEditing && task) {
         const updates: TaskUpdateRequest = {
           title: title.trim(),
           description: description.trim() || undefined,
