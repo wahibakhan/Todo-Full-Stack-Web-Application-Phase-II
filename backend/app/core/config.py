@@ -27,7 +27,9 @@ class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api"
 
     # CORS Configuration
-    CORS_ORIGINS: list[str] = ["http://localhost:3000"]
+    # Comma-separated list of allowed origins
+    # Example: http://localhost:3000,https://your-space.hf.space
+    CORS_ORIGINS: list[str] = ["http://localhost:3000", "*"]
 
     model_config = SettingsConfigDict(
         env_file=".env",
