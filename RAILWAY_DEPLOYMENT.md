@@ -15,7 +15,11 @@ This guide covers deploying the FastAPI backend to Railway.
 1. Go to https://railway.app/new
 2. Select "Deploy from GitHub repo"
 3. Choose your todo_app repository
-4. Railway will auto-detect the configuration from `railway.json`
+4. **IMPORTANT:** Configure Root Directory:
+   - After selecting the repo, click "Configure"
+   - Set **Root Directory** to: `backend`
+   - This tells Railway to deploy only the backend folder
+5. Click "Deploy"
 
 ### 2. Configure Environment Variables
 
@@ -68,9 +72,23 @@ Railway can provision PostgreSQL, but we're using Neon:
 
 ## Configuration Files
 
-- **`railway.json`** (root): Main Railway configuration
+- **`railway.json`** (root): Main Railway configuration for monorepo
+- **`nixpacks.toml`** (root): Nixpacks build configuration pointing to backend/
 - **`backend/railway.json`**: Backend-specific settings
 - **`backend/Procfile`**: Alternative start command definition
+
+## Important: Monorepo Setup
+
+This project uses a monorepo structure with `backend/` and `frontend/` folders. Railway needs to know to build only the backend:
+
+**Option 1: Set Root Directory (Recommended)**
+- In Railway Dashboard → Settings → General
+- Set **Root Directory** to: `backend`
+- Railway will treat backend/ as the project root
+
+**Option 2: Use Configuration Files**
+- The `nixpacks.toml` file tells Railway to look in backend/
+- Railway will automatically detect and use this configuration
 
 ## Health Check
 
@@ -97,7 +115,18 @@ Access via Railway Dashboard → your project → Observability tab
 
 ## Troubleshooting
 
-### Build Fails
+### Build Fails: "Could not find requirements.txt"
+
+**Cause:** Railway is looking in the wrong directory (root instead of backend/)
+
+**Fix:**
+1. Go to Railway Dashboard → Settings → General
+2. Set **Root Directory** to: `backend`
+3. Redeploy
+
+Or verify `nixpacks.toml` exists in root with correct configuration.
+
+### Build Fails: Requirements Installation Error
 
 Check that `backend/requirements.txt` is valid:
 ```bash
