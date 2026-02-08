@@ -30,3 +30,7 @@ Once deployed, visit `/docs` for interactive API documentation.
 - PostgreSQL (Neon)
 - JWT Authentication
 - Uvicorn
+
+## Deployment
+
+Automatically deployed to Hugging Face Spaces via GitHub Actions.
