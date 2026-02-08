@@ -1,0 +1,66 @@
+name: Deploy Backend to Hugging Face Spaces
+
+on:
+  push:
+    branches:
+      - 002-fullstack-web
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-huggingface.yml'
+  workflow_dispatch:  # Allow manual trigger from GitHub Actions tab
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for subtree
+          lfs: true
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+
+      - name: Deploy to Hugging Face Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE_NAME: ${{ secrets.HF_SPACE_NAME }}
+        run: |
+          echo "🚀 Starting deployment to Hugging Face Spaces..."
+
+          # Add Hugging Face remote (ignore if already exists)
+          git remote add hf https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME 2>/dev/null || true
+
+          # Create a temporary branch with only backend folder
+          echo "📦 Preparing backend files..."
+          git subtree split --prefix=backend -b hf-deploy-temp
+
+          # Push to Hugging Face
+          echo "⬆️  Pushing to Hugging Face..."
+          git push hf hf-deploy-temp:main --force
+
+          # Cleanup
+          git branch -D hf-deploy-temp
+
+          echo "✅ Deployment completed successfully!"
+
+      - name: Deployment Summary
+        env:
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE_NAME: ${{ secrets.HF_SPACE_NAME }}
+        run: |
+          echo "## 🎉 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Your backend has been deployed to Hugging Face Spaces." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Space URL:** https://huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**API URL:** https://$HF_USERNAME-$HF_SPACE_NAME.hf.space" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**API Docs:** https://$HF_USERNAME-$HF_SPACE_NAME.hf.space/docs" >> $GITHUB_STEP_SUMMARY
