@@ -1,23 +1,25 @@
 # FastAPI and server
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-python-multipart==0.0.20
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Pydantic and validation
+pydantic
+pydantic-settings
+email-validator
+
+# Environment variables
+python-dotenv
 
 # Database
-sqlmodel==0.0.24
-psycopg2-binary==2.9.10
+sqlmodel
+psycopg2-binary
 
 # Authentication and security
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-python-dotenv==1.0.0
-
-
-# Pydantic (for schemas)
-pydantic==2.10.5
-pydantic-settings==2.7.1
+python-jose[cryptography]
+passlib[bcrypt]
 
 # Testing (optional)
-pytest==7.4.3
-pytest-asyncio==0.21.1
-httpx==0.25.2
+pytest
+pytest-asyncio
+httpx
