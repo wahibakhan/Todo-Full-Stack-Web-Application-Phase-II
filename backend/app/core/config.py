@@ -28,8 +28,8 @@ class Settings(BaseSettings):
 
     # CORS Configuration
     # Comma-separated list of allowed origins
-    # Example: http://localhost:3000,https://your-space.hf.space
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "*"]
+    # Example: http://localhost:3001,https://your-space.hf.space
+    CORS_ORIGINS: list[str] = ["http://localhost:3001", "*"]
 
     model_config = SettingsConfigDict(
         env_file=".env",

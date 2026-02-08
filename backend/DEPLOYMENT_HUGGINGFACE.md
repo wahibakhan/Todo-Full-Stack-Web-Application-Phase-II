@@ -69,23 +69,25 @@ You'll need to configure these secrets in Hugging Face Spaces:
    cd C:\projects\todo_app\backend
    ```
 
-2. **Initialize Git** (if not already in repo):
-   ```bash
-   git init
-   ```
-
-3. **Add Hugging Face remote**:
+2. **Add Hugging Face remote** (if not already added):
    ```bash
    git remote add hf https://huggingface.co/spaces/YOUR_USERNAME/YOUR_SPACE_NAME
    ```
    Replace `YOUR_USERNAME` and `YOUR_SPACE_NAME` with your actual values.
 
-4. **Commit and push**:
+3. **Create deployment branch** (optional but recommended):
+   ```bash
+   git checkout -b deploy-hf
+   ```
+
+4. **Commit and push to Hugging Face**:
    ```bash
    git add .
-   git commit -m "Initial backend deployment"
-   git push hf main
+   git commit -m "Deploy backend to Hugging Face Spaces"
+   git push hf deploy-hf:main
    ```
+
+   Note: Hugging Face Spaces uses `main` as the default branch.
 
 ### Option B: Deploy via Web Interface
 
@@ -96,6 +98,7 @@ You'll need to configure these secrets in Hugging Face Spaces:
    - `Dockerfile`
    - `requirements.txt`
    - `README.md` (with Hugging Face frontmatter)
+   - `runtime.txt` (optional)
    - `app/` directory with all Python files
 
 ## Step 5: Verify Deployment
@@ -127,6 +130,7 @@ After your backend is deployed, update your frontend to point to the Hugging Fac
 1. In your frontend `.env.local`:
    ```
    NEXT_PUBLIC_API_URL=https://YOUR_USERNAME-YOUR_SPACE_NAME.hf.space
+   BETTER_AUTH_SECRET=<same-secret-as-backend>
    ```
 
 2. Also update CORS_ORIGINS in your backend secrets if needed to include your frontend URL.
@@ -179,11 +183,11 @@ Once deployed, your API will have these endpoints:
 
 ## Security Notes
 
-- ✅ All secrets are stored in Hugging Face Spaces secrets (not in code)
-- ✅ Database uses SSL (sslmode=require)
-- ✅ JWT tokens for authentication
-- ✅ User data isolation (queries filtered by user_id)
-- ✅ CORS configured to only allow your frontend
+- All secrets are stored in Hugging Face Spaces secrets (not in code)
+- Database uses SSL (sslmode=require)
+- JWT tokens for authentication
+- User data isolation (queries filtered by user_id)
+- CORS configured to only allow your frontend
 
 ## Next Steps
 
