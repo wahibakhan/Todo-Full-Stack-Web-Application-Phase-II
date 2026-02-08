@@ -5,7 +5,7 @@ python-multipart==0.0.20
 
 # Database
 sqlmodel==0.0.24
-psycopg[binary]==3.2.3
+psycopg2-binary==2.9.10
 
 # Authentication and security
 python-jose[cryptography]==3.3.0
