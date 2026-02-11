@@ -8,6 +8,7 @@ from app.database import get_session
 from app.models.user import User
 from app.schemas.auth import SignupRequest, LoginRequest, AuthResponse
 from app.core.security import hash_password, verify_password, create_access_token
+from app.core.config import settings
 from app.dependencies import get_current_user
 
 router = APIRouter()
@@ -92,12 +93,15 @@ def login(
     )
 
     # Set token in httpOnly cookie
+    # secure=True and samesite="none" required for cross-origin cookies
+    # (frontend on Vercel, backend on Hugging Face are different domains)
+    is_production = settings.ENVIRONMENT == "production"
     response.set_cookie(
         key="auth-token",
         value=access_token,
         httponly=True,  # XSS protection
-        secure=False,  # Set to True in production (HTTPS only)
-        samesite="lax",  # CSRF protection
+        secure=is_production,  # True in production (HTTPS only)
+        samesite="none" if is_production else "lax",  # Cross-origin in production
         max_age=86400  # 24 hours
     )
 
@@ -119,12 +123,13 @@ def logout(
     Requires authentication (JWT token).
     """
     # Clear the auth cookie
+    is_production = settings.ENVIRONMENT == "production"
     response.set_cookie(
         key="auth-token",
         value="",
         httponly=True,
-        secure=False,
-        samesite="lax",
+        secure=is_production,
+        samesite="none" if is_production else "lax",
         max_age=0  # Expire immediately
     )
 

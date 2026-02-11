@@ -9,6 +9,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Set production environment for Hugging Face deployment
+ENV ENVIRONMENT=production
+
 # Expose port 7860 (Hugging Face default)
 EXPOSE 7860
 
