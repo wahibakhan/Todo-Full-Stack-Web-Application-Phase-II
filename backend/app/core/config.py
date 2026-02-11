@@ -27,8 +27,10 @@ class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api"
 
     # CORS Configuration
-    # Allowed origins for CORS (can be "*" for all origins in development)
-    CORS_ORIGINS: str = "*"
+    # Comma-separated list of allowed origins for CORS
+    # Example: "http://localhost:3001,https://your-app.vercel.app"
+    # Use "*" for all origins (development only)
+    CORS_ORIGINS: str = "http://localhost:3001,http://localhost:3000,https://frontend-rho-pied-zz4wyiskla.vercel.app"
 
     model_config = SettingsConfigDict(
         env_file=".env",
