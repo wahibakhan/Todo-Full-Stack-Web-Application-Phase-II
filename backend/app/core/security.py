@@ -4,20 +4,19 @@ Security utilities for password hashing and JWT token management.
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 
+import bcrypt
 from jose import jwt, JWTError
-from passlib.context import CryptContext
 from app.core.config import settings
-
-# Password hashing context (bcrypt with cost factor 12)
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(password: str) -> str:
     """
     Hash a password using bcrypt.
-    Cost factor: 12 (balance between security and performance)
+    Uses bcrypt directly (passlib has compatibility issues with bcrypt >= 4.1).
     """
-    return pwd_context.hash(password)
+    password_bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt(rounds=12)
+    return bcrypt.hashpw(password_bytes, salt).decode("utf-8")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -25,7 +24,10 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     Verify a plain password against a hashed password.
     Returns True if match, False otherwise.
     """
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(
+        plain_password.encode("utf-8"),
+        hashed_password.encode("utf-8"),
+    )
 
 
 def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
